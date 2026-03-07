@@ -162,5 +162,27 @@ document.getElementById("grocery").innerHTML=html
 
 }
 
+function addToPlan(recipeName){
+
+let day = prompt("Add to which day? (1-30)")
+
+if(!mealPlan[day-1]){
+
+mealPlan[day-1] = {
+day:day,
+breakfast:"",
+lunch:"",
+dinner:""
+}
+
+}
+
+let mealType = prompt("Breakfast, lunch, or dinner?")
+
+mealPlan[day-1][mealType] = recipeName
+
+alert("Added to meal plan!")
+
+}
 
 
