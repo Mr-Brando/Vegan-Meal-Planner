@@ -99,21 +99,48 @@ document.getElementById("plan").innerHTML=html
 
 function generateGrocery(){
 
-let list={}
+let list = {}
 
-recipes.forEach(r=>{
+mealPlan.forEach(day=>{
 
-r.ingredients.forEach(i=>{
+let meals = [day.breakfast, day.lunch, day.dinner]
 
-let amount=parseFloat(scale(i.qty,r.servings))
+meals.forEach(mealName=>{
 
-if(!list[i.name]) list[i.name]=0
+let recipe = recipes.find(r=>r.name === mealName)
 
-list[i.name]+=amount
+if(recipe){
+
+recipe.ingredients.forEach(i=>{
+
+let servings = document.getElementById("servings").value
+let amount = i.qty * (servings / recipe.servings)
+
+if(!list[i.name]) list[i.name] = 0
+
+list[i.name] += amount
+
+})
+
+}
 
 })
 
 })
+
+let html = "<ul>"
+
+for(let item in list){
+
+html += "<li>" + toFraction(list[item]) + " " + item + "</li>"
+
+}
+
+html += "</ul>"
+
+document.getElementById("grocery").innerHTML = html
+
+}
 
 let html="<ul>"
 
@@ -126,4 +153,5 @@ html+="</ul>"
 document.getElementById("grocery").innerHTML=html
 
 }
+
 
