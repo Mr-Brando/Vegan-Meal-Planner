@@ -1,58 +1,83 @@
 // =======================
 // mealPlan.js
-// Vegan Meal Planner
-// Clean & Functional
+// Fully working for app.js
 // =======================
 
-// Initialize mealPlan array
-// 30 days by default (monthly plan)
+// Initialize meal plan array (30 days max)
 let mealPlan = [];
 
-// Fill each day with empty meals
-for(let i = 0; i < 30; i++){
-  mealPlan[i] = {
-    day: i + 1,
-    breakfast: "",
-    lunch: "",
-    dinner: ""
-  };
-}
-
-// =======================
-// Helper functions
-// =======================
-
-// Get meal plan length from dropdown
-function getPlanLength(){
-  const length = parseInt(document.getElementById("planLength").value);
-  if([7,14,30].includes(length)) return length;
-  return 30; // default monthly
-}
-
-// =======================
-// Optional: function to reset plan
-// Clears all meals
-function resetMealPlan(){
-  for(let i = 0; i < mealPlan.length; i++){
-    mealPlan[i].breakfast = "";
-    mealPlan[i].lunch = "";
-    mealPlan[i].dinner = "";
+function initMealPlan() {
+  mealPlan = [];
+  for (let i = 0; i < 30; i++) {
+    mealPlan[i] = {
+      day: i + 1,
+      breakfast: "",
+      lunch: "",
+      dinner: ""
+    };
   }
-  loadPlan(); // refresh display
+}
+
+// Call this once when the page loads
+initMealPlan();
+
+// Get the number of days to display based on dropdown
+function getPlanLength() {
+  const lengthSelect = document.getElementById("planLength");
+  if (!lengthSelect) return 30; // fallback
+  const val = parseInt(lengthSelect.value);
+  return [7, 14, 30].includes(val) ? val : 30;
+}
+
+// Add recipe to plan
+function addToPlan(recipeName) {
+  const day = parseInt(prompt("Add to which day? (1-" + getPlanLength() + ")"));
+  if (isNaN(day) || day < 1 || day > getPlanLength()) {
+    return alert("Invalid day!");
+  }
+
+  let mealType = prompt("Breakfast, lunch, or dinner?").toLowerCase();
+  if (!["breakfast", "lunch", "dinner"].includes(mealType)) {
+    return alert("Invalid meal type!");
+  }
+
+  if (!mealPlan[day - 1]) {
+    mealPlan[day - 1] = { day: day, breakfast: "", lunch: "", dinner: "" };
+  }
+
+  mealPlan[day - 1][mealType] = recipeName;
+  loadPlan();
+}
+
+// Remove meal
+function removeMeal(day, mealType) {
+  if (mealPlan[day] && mealType) {
+    mealPlan[day][mealType] = "";
+    loadPlan();
+  }
 }
 
 // =======================
-// Optional: function to get meals for a specific day
-function getDayMeals(dayNumber){
-  if(dayNumber < 1 || dayNumber > mealPlan.length) return null;
-  return mealPlan[dayNumber - 1];
+// Load the plan display
+// This function MUST be in mealPlan.js or app.js
+// =======================
+function loadPlan() {
+  const length = getPlanLength();
+  let html = "";
+
+  for (let i = 0; i < length; i++) {
+    let day = mealPlan[i];
+    if (!day) continue;
+
+    html += "<h3>Day " + day.day + "</h3>";
+    html += "Breakfast: " + (day.breakfast || "(empty)") +
+            ' <button onclick="removeMeal(' + i + ',\'breakfast\')">Remove</button><br>';
+    html += "Lunch: " + (day.lunch || "(empty)") +
+            ' <button onclick="removeMeal(' + i + ',\'lunch\')">Remove</button><br>';
+    html += "Dinner: " + (day.dinner || "(empty)") +
+            ' <button onclick="removeMeal(' + i + ',\'dinner\')">Remove</button><br><br>';
+  }
+
+  const planDiv = document.getElementById("plan");
+  if (planDiv) planDiv.innerHTML = html;
 }
-
-// =======================
-// Example usage
-// mealPlan[0].breakfast = "Apple Cinnamon Oatmeal"
-// mealPlan[1].dinner = "Lentil Sweet Potato Stew"
-// =======================
-
-// export for modular setups if needed (not required for vanilla JS)
-// export { mealPlan, getPlanLength, resetMealPlan, getDayMeals };
