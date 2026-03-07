@@ -1,11 +1,58 @@
-let mealPlan = [
+// =======================
+// mealPlan.js
+// Vegan Meal Planner
+// Clean & Functional
+// =======================
 
-{day:1,breakfast:"Apple Cinnamon Oatmeal",lunch:"Chickpea Veggie Wraps",dinner:"Lentil Sweet Potato Stew"},
-{day:2,breakfast:"Banana Oat Pancakes",lunch:"Quinoa Veggie Bowl",dinner:"Black Bean Chili"},
-{day:3,breakfast:"Green Smoothie",lunch:"Hummus Veggie Sandwich",dinner:"Vegetable Stir Fry"},
-{day:4,breakfast:"Overnight Oats",lunch:"Chickpea Salad",dinner:"Sweet Potato Curry"},
-{day:5,breakfast:"Fruit Oatmeal",lunch:"Bean Burrito Bowl",dinner:"Lentil Soup"},
-{day:6,breakfast:"Banana Smoothie",lunch:"Quinoa Salad",dinner:"Vegetable Chili"},
-{day:7,breakfast:"Berry Oats",lunch:"Hummus Wrap",dinner:"Chickpea Curry"}
+// Initialize mealPlan array
+// 30 days by default (monthly plan)
+let mealPlan = [];
 
-];
+// Fill each day with empty meals
+for(let i = 0; i < 30; i++){
+  mealPlan[i] = {
+    day: i + 1,
+    breakfast: "",
+    lunch: "",
+    dinner: ""
+  };
+}
+
+// =======================
+// Helper functions
+// =======================
+
+// Get meal plan length from dropdown
+function getPlanLength(){
+  const length = parseInt(document.getElementById("planLength").value);
+  if([7,14,30].includes(length)) return length;
+  return 30; // default monthly
+}
+
+// =======================
+// Optional: function to reset plan
+// Clears all meals
+function resetMealPlan(){
+  for(let i = 0; i < mealPlan.length; i++){
+    mealPlan[i].breakfast = "";
+    mealPlan[i].lunch = "";
+    mealPlan[i].dinner = "";
+  }
+  loadPlan(); // refresh display
+}
+
+// =======================
+// Optional: function to get meals for a specific day
+function getDayMeals(dayNumber){
+  if(dayNumber < 1 || dayNumber > mealPlan.length) return null;
+  return mealPlan[dayNumber - 1];
+}
+
+// =======================
+// Example usage
+// mealPlan[0].breakfast = "Apple Cinnamon Oatmeal"
+// mealPlan[1].dinner = "Lentil Sweet Potato Stew"
+// =======================
+
+// export for modular setups if needed (not required for vanilla JS)
+// export { mealPlan, getPlanLength, resetMealPlan, getDayMeals };
