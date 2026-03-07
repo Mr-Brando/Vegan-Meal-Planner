@@ -1,44 +1,36 @@
 body{
-
 font-family:Arial;
-background:#f3f8f3;
+background:#eef6ee;
 text-align:center;
+padding:20px;
+}
 
+h1{
+color:#2e7d32;
 }
 
 button{
-
 padding:15px;
 margin:10px;
-
 font-size:18px;
-
-border:none;
-
-border-radius:10px;
-
-background:#4CAF50;
-
-color:white;
-
 width:220px;
+border:none;
+border-radius:12px;
+background:#4CAF50;
+color:white;
+}
 
+button:hover{
+background:#3e8e41;
 }
 
 .section{
-
 display:none;
-
 margin-top:20px;
-
 }
 
 ul{
-
 text-align:left;
-
 max-width:400px;
-
 margin:auto;
-
 }
