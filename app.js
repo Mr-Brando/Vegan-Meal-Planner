@@ -55,36 +55,27 @@ if(section==="grocery") generateGrocery()
 
 }
 
-function loadRecipes(){
+function loadRecipes() {
+  let html = "";
 
-let html=""
+  recipes.forEach(function(r){
+    html += "<h3>" + r.name + "</h3>";
 
-recipes.forEach(r=>{
+    // Add to Meal Plan button (safe)
+    html += '<button onclick="addToPlan(\'' + r.name + '\')">Add to Meal Plan</button>';
 
-html+="<h3>"+r.name+"</h3>"
+    html += "<b>Ingredients</b><ul>";
+    r.ingredients.forEach(function(i){
+      html += "<li>" + scale(i.qty, r.servings) + " " + i.name + "</li>";
+    });
+    html += "</ul><b>Steps</b><ol>";
+    r.steps.forEach(function(s){
+      html += "<li>" + s + "</li>";
+    });
+    html += "</ol>";
+  });
 
-html+=`<button onclick="addToPlan('${r.name}')">
-Add to Meal Plan
-</button>`
-  
-html+="<b>Ingredients</b><ul>"
-
-r.ingredients.forEach(i=>{
-html+="<li>"+scale(i.qty,r.servings)+" "+i.name+"</li>"
-})
-
-html+="</ul><b>Steps</b><ol>"
-
-r.steps.forEach(s=>{
-html+="<li>"+s+"</li>"
-})
-
-html+="</ol>"
-
-})
-
-document.getElementById("recipes").innerHTML=html
-  
+  document.getElementById("recipes").innerHTML = html;
 }
 
 function loadPlan(){
@@ -191,6 +182,7 @@ mealPlan[day][mealType] = ""
 loadPlan()
 
 }
+
 
 
 
