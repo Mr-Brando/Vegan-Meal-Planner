@@ -1,6 +1,6 @@
 // =======================
 // app.js
-// Handles Recipes, Sections, Grocery List
+// Recipes, Sections, Grocery, Meal Prep
 // =======================
 
 // Get servings
@@ -35,6 +35,7 @@ function show(section){
   if(section==="recipes") loadRecipes();
   if(section==="plan") loadPlan();
   if(section==="grocery") generateGrocery();
+  if(section==="prep") generateMealPrep();
 }
 
 // Load recipes
@@ -76,4 +77,36 @@ function generateGrocery() {
   for(let item in list) html+="<li>"+toFraction(list[item])+" "+item+"</li>";
   html+="</ul>";
   document.getElementById("grocery").innerHTML = html;
+}
+
+// =======================
+// Dynamic Weekly Meal Prep
+// =======================
+function generateMealPrep(){
+  let list = {};
+
+  mealPlan.forEach(day => {
+    if(!day) return;
+    let meals = [day.breakfast, day.lunch, day.dinner];
+
+    meals.forEach(mealName => {
+      if(!mealName) return;
+      let recipe = recipes.find(r => r.name === mealName);
+      if(recipe){
+        recipe.ingredients.forEach(i=>{
+          let amount = i.qty * (getServings()/recipe.servings);
+          if(!list[i.name]) list[i.name]=0;
+          list[i.name]+=amount;
+        });
+      }
+    });
+  });
+
+  let html = "<h2>Weekly Meal Prep</h2><ul>";
+  for(let item in list){
+    html += "<li>" + toFraction(list[item]) + " " + item + "</li>";
+  }
+  html += "</ul>";
+
+  document.getElementById("prep").innerHTML = html;
 }
