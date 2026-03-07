@@ -62,6 +62,11 @@ let html=""
 recipes.forEach(r=>{
 
 html+="<h3>"+r.name+"</h3>"
+
+html+=`<button onclick="addToPlan('${r.name}')">
+Add to Meal Plan
+</button>`
+  
 html+="<b>Ingredients</b><ul>"
 
 r.ingredients.forEach(i=>{
@@ -184,5 +189,6 @@ mealPlan[day-1][mealType] = recipeName
 alert("Added to meal plan!")
 
 }
+
 
 
