@@ -83,18 +83,26 @@ document.getElementById("recipes").innerHTML=html
 
 function loadPlan(){
 
+let length = document.getElementById("planLength").value
+
 let html=""
 
-mealPlan.forEach(d=>{
+for(let i=0;i<length;i++){
 
-html+="<h3>Day "+d.day+"</h3>"
-html+="Breakfast: "+d.breakfast+"<br>"
-html+="Lunch: "+d.lunch+"<br>"
-html+="Dinner: "+d.dinner+"<br><br>"
+let day = mealPlan[i]
 
-})
+if(!day) continue
+
+html+="<h3>Day "+day.day+"</h3>"
+
+html+="Breakfast: "+day.breakfast+"<br>"
+html+="Lunch: "+day.lunch+"<br>"
+html+="Dinner: "+day.dinner+"<br><br>"
+
+}
 
 document.getElementById("plan").innerHTML=html
+
 }
 
 function generateGrocery(){
@@ -153,5 +161,6 @@ html+="</ul>"
 document.getElementById("grocery").innerHTML=html
 
 }
+
 
 
