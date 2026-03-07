@@ -1,6 +1,6 @@
 // =======================
-// mealPlan.js
-// Fully functional
+// mealplan.js
+// Handles the meal plan logic
 // =======================
 
 // Initialize meal plan array (30 days)
