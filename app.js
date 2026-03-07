@@ -182,9 +182,3 @@ mealPlan[day][mealType] = ""
 loadPlan()
 
 }
-
-
-
-
-
-
