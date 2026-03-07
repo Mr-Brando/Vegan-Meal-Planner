@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Vegan Meal Planner</title>
-
 <link rel="stylesheet" href="styles.css">
-
 <link rel="manifest" href="manifest.json">
-
 </head>
 
 <body>
 
 <h1>🌱 Vegan Meal Planner</h1>
 
-<label>Number of Servings</label>
-<br>
+<!-- Number of Servings -->
+<label>Number of Servings</label><br>
 <input type="number" id="servings" value="4" min="1">
 
+<!-- Menu Buttons -->
 <div class="menu">
-  
+  <button onclick="show('plan')">Plan</button>
+  <button onclick="show('recipes')">Recipes</button>
+  <button onclick="show('grocery')">Grocery List</button>
+  <button onclick="show('prep')">Meal Prep</button>
+</div>
+
 <!-- Meal Plan Length Selector -->
 <label for="planLength">Meal Plan Length:</label>
 <select id="planLength" onchange="loadPlan()">
@@ -30,39 +31,25 @@
   <option value="30" selected>Monthly</option>
 </select>
 
-<!-- Meal Plan Display -->
-<div id="plan" class="section" style="display:none;"></div>
-<button onclick="show('plan')">Plan</button>
-<button onclick="show('recipes')">Recipes</button>
-<button onclick="show('grocery')">Grocery List</button>
-<button onclick="show('prep')">Meal Prep</button>
-
+<!-- Sections -->
+<div id="plan" class="section" style="display:none"></div>
+<div id="recipes" class="section" style="display:none"></div>
+<div id="grocery" class="section" style="display:none"></div>
+<div id="prep" class="section" style="display:none">
+  <h2>Weekly Meal Prep</h2>
+  <ul>
+    <li>Cook large batch of rice</li>
+    <li>Cook lentils or beans</li>
+    <li>Chop onions, carrots, peppers</li>
+    <li>Roast potatoes and broccoli</li>
+    <li>Make hummus</li>
+  </ul>
 </div>
 
-<div id="plan" class="section"></div>
-<div id="recipes" class="section"></div>
-<div id="grocery" class="section"></div>
-
-<div id="prep" class="section">
-
-<h2>Weekly Meal Prep</h2>
-
-<ul>
-
-<li>Cook large batch of rice</li>
-<li>Cook lentils or beans</li>
-<li>Chop onions, carrots, peppers</li>
-<li>Roast potatoes and broccoli</li>
-<li>Make hummus</li>
-
-</ul>
-
-</div>
-
+<!-- Scripts -->
 <script src="recipes.js"></script>
 <script src="mealplan.js"></script>
 <script src="app.js"></script>
 
 </body>
-
 </html>
