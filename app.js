@@ -190,5 +190,12 @@ alert("Added to meal plan!")
 
 }
 
+function removeMeal(day, mealType){
+
+mealPlan[day][mealType] = ""
+
+loadPlan()
+
+}
 
 
