@@ -161,18 +161,6 @@ document.getElementById("grocery").innerHTML = html
 
 }
 
-let html="<ul>"
-
-for(let item in list){
-html+="<li>"+list[item].toFixed(1)+" "+item+"</li>"
-}
-
-html+="</ul>"
-
-document.getElementById("grocery").innerHTML=html
-
-}
-
 function addToPlan(recipeName){
 
 let day = prompt("Add to which day? (1-30)")
@@ -203,6 +191,7 @@ mealPlan[day][mealType] = ""
 loadPlan()
 
 }
+
 
 
 
