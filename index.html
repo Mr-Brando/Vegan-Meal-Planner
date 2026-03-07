@@ -21,8 +21,18 @@
 <input type="number" id="servings" value="4" min="1">
 
 <div class="menu">
+  
+<!-- Meal Plan Length Selector -->
+<label for="planLength">Meal Plan Length:</label>
+<select id="planLength" onchange="loadPlan()">
+  <option value="7">Weekly</option>
+  <option value="14">Bi-Weekly</option>
+  <option value="30" selected>Monthly</option>
+</select>
 
-<button onclick="show('plan')">Monthly Plan</button>
+<!-- Meal Plan Display -->
+<div id="plan" class="section" style="display:none;"></div>
+<button onclick="show('plan')">Plan</button>
 <button onclick="show('recipes')">Recipes</button>
 <button onclick="show('grocery')">Grocery List</button>
 <button onclick="show('prep')">Meal Prep</button>
@@ -54,4 +64,5 @@
 <script src="app.js"></script>
 
 </body>
+
 </html>
