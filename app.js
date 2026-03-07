@@ -2,8 +2,45 @@ function getServings(){
 return document.getElementById("servings").value
 }
 
+function toFraction(num){
+
+let fractions = [
+{decimal:0.25,fraction:"¼"},
+{decimal:0.5,fraction:"½"},
+{decimal:0.75,fraction:"¾"}
+]
+
+let whole = Math.floor(num)
+let decimal = num - whole
+
+let closest = ""
+
+fractions.forEach(f=>{
+if(Math.abs(decimal - f.decimal) < 0.13){
+closest = f.fraction
+}
+})
+
+if(closest === ""){
+return Math.round(num)
+}
+
+if(whole === 0){
+return closest
+}
+
+return whole + " " + closest
+
+}
+
 function scale(qty,base){
-return (qty*(getServings()/base)).toFixed(1)
+
+let servings = document.getElementById("servings").value
+
+let result = qty * (servings/base)
+
+return toFraction(result)
+
 }
 
 function show(section){
@@ -89,3 +126,4 @@ html+="</ul>"
 document.getElementById("grocery").innerHTML=html
 
 }
+
