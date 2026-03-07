@@ -1,0 +1,8 @@
+{
+"name":"Vegan Meal Planner",
+"short_name":"Vegan Planner",
+"start_url":"index.html",
+"display":"standalone",
+"background_color":"#ffffff",
+"theme_color":"#4CAF50"
+}
