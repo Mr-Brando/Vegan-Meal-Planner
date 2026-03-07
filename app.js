@@ -100,9 +100,14 @@ if(!day) continue
 
 html+="<h3>Day "+day.day+"</h3>"
 
-html+="Breakfast: "+day.breakfast+"<br>"
-html+="Lunch: "+day.lunch+"<br>"
-html+="Dinner: "+day.dinner+"<br><br>"
+html+="Breakfast: "+day.breakfast+
+` <button onclick="removeMeal(${i},'breakfast')">Remove</button><br>`
+
+html+="Lunch: "+day.lunch+
+` <button onclick="removeMeal(${i},'lunch')">Remove</button><br>`
+
+html+="Dinner: "+day.dinner+
+` <button onclick="removeMeal(${i},'dinner')">Remove</button><br><br>`
 
 }
 
@@ -197,5 +202,6 @@ mealPlan[day][mealType] = ""
 loadPlan()
 
 }
+
 
 
