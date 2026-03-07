@@ -84,6 +84,7 @@ html+="</ol>"
 })
 
 document.getElementById("recipes").innerHTML=html
+  
 }
 
 function loadPlan(){
@@ -202,6 +203,7 @@ mealPlan[day][mealType] = ""
 loadPlan()
 
 }
+
 
 
 
