@@ -1,92 +1,48 @@
-// =======================
-// Meal Plan Storage + Logic
-// =======================
+let mealPlan = JSON.parse(localStorage.getItem("mealPlan")) || {};
 
-let mealPlan = [];
-
-// ---------- Load saved plan ----------
-function loadSavedMealPlan(){
-
-  let saved = localStorage.getItem("veganMealPlan");
-
-  if(saved){
-    mealPlan = JSON.parse(saved);
-  }else{
-    initMealPlan();
-  }
-
-}
-
-// ---------- Create empty plan ----------
-function initMealPlan(){
-
-  mealPlan = [];
-
-  for(let i=0;i<30;i++){
-    mealPlan[i] = {
-      day:i+1,
-      breakfast:"",
-      lunch:"",
-      dinner:""
-    };
-  }
-
-}
-
-// ---------- Save plan ----------
 function saveMealPlan(){
-  localStorage.setItem("veganMealPlan", JSON.stringify(mealPlan));
+localStorage.setItem("mealPlan", JSON.stringify(mealPlan));
 }
 
-// ---------- Plan length ----------
-function getPlanLength(){
-
-  let val = parseInt(document.getElementById("planLength").value);
-
-  if([7,14,30].includes(val)) return val;
-
-  return 30;
-
-}
-
-// ---------- Remove meal ----------
-function removeMeal(day,mealType){
-
-  mealPlan[day][mealType] = "";
-
-  saveMealPlan();
-
-  loadPlan();
-
-}
-
-// ---------- Load plan display ----------
 function loadPlan(){
 
-  let length = getPlanLength();
+const days = parseInt(document.getElementById("planLength").value);
+const planDiv = document.getElementById("plan");
 
-  let html="";
+planDiv.innerHTML = "";
 
-  for(let i=0;i<length;i++){
+for(let i=1;i<=days;i++){
 
-    let d = mealPlan[i];
+if(!mealPlan[i]){
+mealPlan[i] = {breakfast:null,lunch:null,dinner:null};
+}
 
-    html+="<h3>Day "+d.day+"</h3>";
+const dayBox = document.createElement("div");
+dayBox.className = "dayBox";
 
-    html+="Breakfast: "+(d.breakfast||"(empty)")+
-    ' <button onclick="removeMeal('+i+',\'breakfast\')">Remove</button><br>';
+dayBox.innerHTML = `
+<h3>Day ${i}</h3>
 
-    html+="Lunch: "+(d.lunch||"(empty)")+
-    ' <button onclick="removeMeal('+i+',\'lunch\')">Remove</button><br>';
+<div>
+<b>Breakfast:</b>
+<span id="day${i}breakfast">${mealPlan[i].breakfast?.name || ""}</span>
+</div>
 
-    html+="Dinner: "+(d.dinner||"(empty)")+
-    ' <button onclick="removeMeal('+i+',\'dinner\')">Remove</button><br><br>';
+<div>
+<b>Lunch:</b>
+<span id="day${i}lunch">${mealPlan[i].lunch?.name || ""}</span>
+</div>
 
-  }
+<div>
+<b>Dinner:</b>
+<span id="day${i}dinner">${mealPlan[i].dinner?.name || ""}</span>
+</div>
+`;
 
-  document.getElementById("plan").innerHTML = html;
+planDiv.appendChild(dayBox);
 
 }
 
-// Load saved plan on startup
-loadSavedMealPlan();
+saveMealPlan();
+
+}
