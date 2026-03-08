@@ -4,68 +4,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vegan Meal Planner</title>
 <link rel="stylesheet" href="styles.css">
-<link rel="manifest" href="manifest.json">
 </head>
-
 <body>
 
 <h1>🌱 Vegan Meal Planner</h1>
 
-<!-- Number of Servings -->
 <label>Number of Servings</label><br>
 <input type="number" id="servings" value="4" min="1">
 
-<!-- Menu Buttons -->
 <div class="menu">
   <button onclick="show('plan')">Plan</button>
   <button onclick="show('recipes')">Recipes</button>
-  <button onclick="show('grocery'); generateGrocery()">Grocery List</button>
+  <button onclick="show('grocery')">Grocery List</button>
   <button onclick="show('prep')">Meal Prep</button>
 </div>
 
-<!-- Meal Plan Length Selector -->
 <label for="planLength">Meal Plan Length:</label>
-<select id="planLength" onchange="loadPlan()">
+<select id="planLength" onchange="renderPlan()">
   <option value="7">Weekly</option>
   <option value="14">Bi-Weekly</option>
   <option value="30" selected>Monthly</option>
 </select>
 
-<!-- Sections -->
 <div id="plan" class="section" style="display:none"></div>
 <div id="recipes" class="section" style="display:none"></div>
 <div id="grocery" class="section" style="display:none"></div>
 <div id="prep" class="section" style="display:none"></div>
 
-<!-- Scripts -->
-<script src="recipes.js"></script>
-<script src="mealplan.js"></script>
-<script src="app.js"></script>
-
-<!-- Meal Selection Popup -->
+<!-- Meal Selector Popup -->
 <div id="mealSelector" style="display:none; position:fixed; bottom:0; left:0; right:0; background:white; padding:20px; border-top:2px solid #ccc; max-height:60%; overflow:auto;">
-
-<h2>Add Meal</h2>
-
-<h3>Select Day</h3>
-<div id="dayButtons"></div>
-
-<h3>Select Meal Type</h3>
-
-<button onclick="selectMealType('breakfast')">Breakfast</button>
-<button onclick="selectMealType('lunch')">Lunch</button>
-<button onclick="selectMealType('dinner')">Dinner</button>
-
-<br><br>
-
-<button onclick="closeMealSelector()">Cancel</button>
-
+  <h2>Add Meal</h2>
+  <h3>Select Day</h3>
+  <div id="dayButtons"></div>
+  <h3>Select Meal Type</h3>
+  <button onclick="selectMealType('breakfast')">Breakfast</button>
+  <button onclick="selectMealType('lunch')">Lunch</button>
+  <button onclick="selectMealType('dinner')">Dinner</button>
+  <br><br>
+  <button onclick="closeMealSelector()">Cancel</button>
 </div>
+
+<script src="recipes.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
-
-
-
-
-
