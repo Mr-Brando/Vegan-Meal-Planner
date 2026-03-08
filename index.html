@@ -42,5 +42,26 @@
 <script src="mealplan.js"></script>
 <script src="app.js"></script>
 
+<!-- Meal Selection Popup -->
+<div id="mealSelector" style="display:none; position:fixed; bottom:0; left:0; right:0; background:white; padding:20px; border-top:2px solid #ccc; max-height:60%; overflow:auto;">
+
+<h2>Add Meal</h2>
+
+<h3>Select Day</h3>
+<div id="dayButtons"></div>
+
+<h3>Select Meal Type</h3>
+
+<button onclick="selectMealType('breakfast')">Breakfast</button>
+<button onclick="selectMealType('lunch')">Lunch</button>
+<button onclick="selectMealType('dinner')">Dinner</button>
+
+<br><br>
+
+<button onclick="closeMealSelector()">Cancel</button>
+
+</div>
+
 </body>
 </html>
+
