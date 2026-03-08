@@ -110,3 +110,65 @@ function generateMealPrep(){
 
   document.getElementById("prep").innerHTML = html;
 }
+
+// =======================
+// Better Meal Selector UI
+// =======================
+
+let selectedRecipe = "";
+let selectedDay = null;
+
+// Open selector
+function openMealSelector(recipeName){
+
+  selectedRecipe = recipeName;
+
+  let length = getPlanLength();
+
+  let html="";
+
+  for(let i=1;i<=length;i++){
+
+    html += `<button onclick="selectDay(${i})">${i}</button> `;
+
+  }
+
+  document.getElementById("dayButtons").innerHTML = html;
+
+  document.getElementById("mealSelector").style.display="block";
+
+}
+
+// Select day
+function selectDay(day){
+
+  selectedDay = day;
+
+}
+
+// Select meal type
+function selectMealType(mealType){
+
+  if(!selectedDay){
+    alert("Select a day first");
+    return;
+  }
+
+  mealPlan[selectedDay-1][mealType] = selectedRecipe;
+
+  saveMealPlan();
+
+  closeMealSelector();
+
+  loadPlan();
+
+}
+
+// Close selector
+function closeMealSelector(){
+
+  document.getElementById("mealSelector").style.display="none";
+
+  selectedDay=null;
+
+}
