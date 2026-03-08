@@ -20,25 +20,59 @@ document.getElementById(section).style.display="block";
 
 }
 
-function renderRecipes(){
+function renderRecipes() {
 
 const recipeDiv = document.getElementById("recipes");
+recipeDiv.innerHTML = "";
 
-recipeDiv.innerHTML="";
-
-recipes.forEach((recipe,index)=>{
+recipes.forEach((recipe, index) => {
 
 let ingredientList = "";
-let stepList = "";
 
-recipe.ingredients.forEach(i=>{
-ingredientList += `<li>${i.amount} ${i.unit} ${i.name}</li>`;
+// Get servings input
+const servingsInput = parseInt(document.getElementById("servings").value) || recipe.servings;
+
+// Scale ingredients
+recipe.ingredients.forEach(i => {
+
+let scaledAmount = (i.amount * servingsInput / recipe.servings);
+
+// Convert decimal to fraction if you have toFraction()
+let displayAmount = toFraction(scaledAmount);
+
+ingredientList += `<li>${displayAmount} ${i.unit} ${i.name}</li>`;
 });
 
-if(recipe.steps){
-recipe.steps.forEach(step=>{
+let stepList = "";
+recipe.steps.forEach(step => {
 stepList += `<li>${step}</li>`;
 });
+
+const card = document.createElement("div");
+card.className = "recipeCard";
+
+card.innerHTML = `
+<h2>${recipe.name}</h2>
+<p>Servings: ${servingsInput}</p>
+
+<h4>Ingredients</h4>
+<ul>
+${ingredientList}
+</ul>
+
+<h4>Steps</h4>
+<ol>
+${stepList}</ol>
+
+<button onclick="openMealSelector(${index})">
+Add To Meal Plan
+</button>
+`;
+
+recipeDiv.appendChild(card);
+
+});
+
 }
 
 const card=document.createElement("div");
@@ -132,4 +166,5 @@ selectedRecipe=null;
 selectedDay=null;
 
 }
+
 
