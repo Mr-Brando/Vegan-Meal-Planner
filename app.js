@@ -1,10 +1,13 @@
 // app.js
 
-// Global Variables
 let mealPlan = JSON.parse(localStorage.getItem("mealPlan")) || [];
 
+let selectedRecipeIndex = null;
+let selectedDay = null;
+let selectedMealType = null;
+
 // ----------------------------
-// Show Sections
+// Show sections
 // ----------------------------
 function show(section) {
   document.querySelectorAll(".section").forEach(s => s.style.display = "none");
@@ -13,54 +16,31 @@ function show(section) {
   el.style.display = "block";
 
   if (section === "recipes") renderRecipes();
-  if (section === "plan") loadPlan();
+  if (section === "plan") renderPlan();
   if (section === "grocery") generateGrocery();
   if (section === "prep") generateMealPrep();
-}
-
-// ----------------------------
-// Fraction helper
-// ----------------------------
-function toFraction(num) {
-  let fractions = [
-    { decimal: 0.25, fraction: "¼" },
-    { decimal: 0.5, fraction: "½" },
-    { decimal: 0.75, fraction: "¾" }
-  ];
-  let whole = Math.floor(num);
-  let decimal = num - whole;
-  let closest = "";
-  fractions.forEach(f => {
-    if (Math.abs(decimal - f.decimal) < 0.13) closest = f.fraction;
-  });
-  if (closest === "") return Math.round(num);
-  return whole === 0 ? closest : whole + " " + closest;
 }
 
 // ----------------------------
 // Render Recipes
 // ----------------------------
 function renderRecipes() {
-  const recipeDiv = document.getElementById("recipes");
-  recipeDiv.innerHTML = "";
+  const div = document.getElementById("recipes");
+  div.innerHTML = "";
   const servingsInput = parseInt(document.getElementById("servings").value) || 1;
 
   recipes.forEach((recipe, index) => {
-    let ingredientsHTML = "";
-    recipe.ingredients.forEach(i => {
-      const scaledAmount = i.amount * (servingsInput / recipe.servings);
-      ingredientsHTML += `<li>${toFraction(scaledAmount)} ${i.unit} ${i.name}</li>`;
-    });
-
-    let stepsHTML = "";
-    recipe.steps.forEach(s => stepsHTML += `<li>${s}</li>`);
-
-    recipeDiv.innerHTML += `
+    let ing = recipe.ingredients.map(i=>{
+      const scaled = i.amount * (servingsInput / recipe.servings);
+      return `${scaled.toFixed(2)} ${i.unit} ${i.name}`;
+    }).join("<br>");
+    let steps = recipe.steps.map(s=>`<li>${s}</li>`).join("");
+    div.innerHTML += `
       <div class="recipeCard">
         <h2>${recipe.name}</h2>
         <p>Servings: ${servingsInput}</p>
-        <h4>Ingredients</h4><ul>${ingredientsHTML}</ul>
-        <h4>Steps</h4><ol>${stepsHTML}</ol>
+        <b>Ingredients:</b><br>${ing}<br>
+        <b>Steps:</b><ol>${steps}</ol>
         <button onclick="openMealSelector(${index})">Add To Meal Plan</button>
       </div>
     `;
@@ -70,11 +50,7 @@ function renderRecipes() {
 // ----------------------------
 // Meal Selector UI
 // ----------------------------
-let selectedRecipeIndex = null;
-let selectedDay = null;
-let selectedMealType = null;
-
-function openMealSelector(recipeIndex) {
+function openMealSelector(recipeIndex){
   selectedRecipeIndex = recipeIndex;
   document.getElementById("mealSelector").style.display = "block";
 
@@ -82,7 +58,7 @@ function openMealSelector(recipeIndex) {
   dayButtonsDiv.innerHTML = "";
   const length = parseInt(document.getElementById("planLength").value) || 30;
 
-  for (let i = 1; i <= length; i++) {
+  for(let i=1;i<=length;i++){
     const btn = document.createElement("button");
     btn.textContent = "Day " + i;
     btn.onclick = () => selectDay(i);
@@ -90,21 +66,22 @@ function openMealSelector(recipeIndex) {
   }
 }
 
-function selectDay(day) { selectedDay = day; }
-function selectMealType(type) {
+function selectDay(day){ selectedDay = day; }
+
+function selectMealType(type){
   selectedMealType = type;
-  if (selectedDay === null || selectedRecipeIndex === null) {
-    alert("Please select a day first!");
+  if(selectedRecipeIndex===null || selectedDay===null){
+    alert("Select a recipe and day first!");
     return;
   }
-  if (!mealPlan[selectedDay - 1]) mealPlan[selectedDay - 1] = { day: selectedDay, breakfast: null, lunch: null, dinner: null };
-  mealPlan[selectedDay - 1][selectedMealType] = { name: recipes[selectedRecipeIndex].name };
-  saveMealPlan();
+  if(!mealPlan[selectedDay-1]) mealPlan[selectedDay-1] = {day:selectedDay, breakfast:null, lunch:null, dinner:null};
+  mealPlan[selectedDay-1][selectedMealType] = {name:recipes[selectedRecipeIndex].name};
+  localStorage.setItem("mealPlan", JSON.stringify(mealPlan));
   closeMealSelector();
-  loadPlan();
+  renderPlan();
 }
 
-function closeMealSelector() {
+function closeMealSelector(){
   selectedRecipeIndex = null;
   selectedDay = null;
   selectedMealType = null;
@@ -112,29 +89,22 @@ function closeMealSelector() {
 }
 
 // ----------------------------
-// Save Meal Plan
+// Render Plan
 // ----------------------------
-function saveMealPlan() {
-  localStorage.setItem("mealPlan", JSON.stringify(mealPlan));
-}
-
-// ----------------------------
-// Load Meal Plan
-// ----------------------------
-function loadPlan() {
-  const planDiv = document.getElementById("plan");
-  planDiv.innerHTML = "";
-  if (!mealPlan || mealPlan.length === 0) { planDiv.innerHTML = "<p>No meals added yet.</p>"; return; }
+function renderPlan(){
+  const div = document.getElementById("plan");
+  div.innerHTML = "";
+  if(!mealPlan.length){ div.innerHTML="<p>No meals yet.</p>"; return; }
   const length = parseInt(document.getElementById("planLength").value) || 30;
 
-  for (let i = 0; i < length; i++) {
+  for(let i=0;i<length;i++){
     const day = mealPlan[i];
-    if (!day) continue;
-    planDiv.innerHTML += `
+    if(!day) continue;
+    div.innerHTML += `
       <h3>Day ${day.day}</h3>
-      Breakfast: ${day.breakfast ? day.breakfast.name : ""} <br>
-      Lunch: ${day.lunch ? day.lunch.name : ""} <br>
-      Dinner: ${day.dinner ? day.dinner.name : ""} <br><br>
+      Breakfast: ${day.breakfast?day.breakfast.name:""}<br>
+      Lunch: ${day.lunch?day.lunch.name:""}<br>
+      Dinner: ${day.dinner?day.dinner.name:""}<br><br>
     `;
   }
 }
@@ -142,24 +112,27 @@ function loadPlan() {
 // ----------------------------
 // Generate Grocery List
 // ----------------------------
-function generateGrocery() {
+function generateGrocery(){
   let list = {};
-  mealPlan.forEach(day => {
+  const servingsInput = parseInt(document.getElementById("servings").value) || 1;
+
+  mealPlan.forEach(day=>{
     ["breakfast","lunch","dinner"].forEach(mealType=>{
-      let meal = day[mealType]; if(!meal) return;
-      let recipe = recipes.find(r => r.name === meal.name); if(!recipe) return;
-      const servingsInput = parseInt(document.getElementById("servings").value) || recipe.servings;
+      const meal = day[mealType];
+      if(!meal) return;
+      const recipe = recipes.find(r=>r.name===meal.name);
+      if(!recipe) return;
       recipe.ingredients.forEach(i=>{
-        let scaledAmount = i.amount * (servingsInput / recipe.servings);
+        const scaled = i.amount * (servingsInput / recipe.servings);
         if(!list[i.name]) list[i.name] = {amount:0, unit:i.unit};
-        list[i.name].amount += scaledAmount;
+        list[i.name].amount += scaled;
       });
     });
   });
 
-  function roundToStoreSize(amount, unit, name) {
-    const bulkItems = ["beans","chickpeas","lentils","rice","quinoa","oats"];
-    if(bulkItems.some(b => name.toLowerCase().includes(b))) return Math.ceil(amount/1000)+" kg";
+  function roundStore(amount, unit, name){
+    const bulk=["beans","chickpeas","lentils","rice","quinoa","oats"];
+    if(bulk.some(b=>name.toLowerCase().includes(b))) return Math.ceil(amount/1000)+" kg";
     if(unit==="g") return Math.ceil(amount/1000)+" kg";
     if(unit==="ml") return Math.ceil(amount/1000)+" L";
     if(unit==="tsp") return Math.ceil(amount/3)+" tbsp";
@@ -169,42 +142,51 @@ function generateGrocery() {
     return Math.ceil(amount)+" "+unit;
   }
 
-  let html = "<ul>";
+  let html="<ul>";
   for(let item in list){
-    const info = list[item];
-    html += `<li>${roundToStoreSize(info.amount, info.unit, item)} ${item}</li>`;
+    const info=list[item];
+    html+=`<li>${roundStore(info.amount, info.unit, item)} ${item}</li>`;
   }
-  html += "</ul>";
+  html+="</ul>";
   document.getElementById("grocery").innerHTML = html;
 }
 
 // ----------------------------
-// Generate Meal Prep
+// Meal Prep
 // ----------------------------
-function generateMealPrep() {
+function generateMealPrep(){
   const prepDiv = document.getElementById("prep");
-  prepDiv.innerHTML = "<h2>Weekly Meal Prep</h2>";
-  if(!mealPlan || mealPlan.length === 0){ prepDiv.innerHTML += "<p>No meals added yet.</p>"; return; }
-
+  prepDiv.innerHTML="<h2>Weekly Meal Prep</h2>";
   let list = {};
-  mealPlan.forEach(day => {
+  const servingsInput = parseInt(document.getElementById("servings").value) || 1;
+
+  mealPlan.forEach(day=>{
     ["breakfast","lunch","dinner"].forEach(mealType=>{
-      let meal = day[mealType]; if(!meal) return;
-      let recipe = recipes.find(r => r.name === meal.name); if(!recipe) return;
-      const servingsInput = parseInt(document.getElementById("servings").value) || recipe.servings;
+      const meal = day[mealType];
+      if(!meal) return;
+      const recipe = recipes.find(r=>r.name===meal.name);
+      if(!recipe) return;
       recipe.ingredients.forEach(i=>{
-        let scaledAmount = i.amount * (servingsInput / recipe.servings);
+        const scaled = i.amount * (servingsInput / recipe.servings);
         if(!list[i.name]) list[i.name] = {amount:0, unit:i.unit};
-        list[i.name].amount += scaledAmount;
+        list[i.name].amount += scaled;
       });
     });
   });
 
-  let html = "<ul>";
+  let html="<ul>";
   for(let item in list){
-    const info = list[item];
-    html += `<li>${toFraction(info.amount)} ${info.unit} ${item}</li>`;
+    const info=list[item];
+    html+=`<li>${info.amount.toFixed(1)} ${info.unit} ${item}</li>`;
   }
-  html += "</ul>";
-  prepDiv.innerHTML += html;
+  html+="</ul>";
+  prepDiv.innerHTML+=html;
 }
+
+// ----------------------------
+// Load from localStorage
+// ----------------------------
+window.onload = ()=>{
+  const stored = JSON.parse(localStorage.getItem("mealPlan"));
+  if(stored) mealPlan = stored;
+};
