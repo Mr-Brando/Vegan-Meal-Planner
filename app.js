@@ -1,12 +1,10 @@
-// ----------------------------
-// app.js - Full Working Version
-// ----------------------------
+// app.js
 
-// Global variables
+// Global Variables
 let mealPlan = JSON.parse(localStorage.getItem("mealPlan")) || [];
 
 // ----------------------------
-// Show / hide sections
+// Show Sections
 // ----------------------------
 function show(section) {
   document.querySelectorAll(".section").forEach(s => s.style.display = "none");
@@ -29,15 +27,12 @@ function toFraction(num) {
     { decimal: 0.5, fraction: "½" },
     { decimal: 0.75, fraction: "¾" }
   ];
-
   let whole = Math.floor(num);
   let decimal = num - whole;
   let closest = "";
-
   fractions.forEach(f => {
     if (Math.abs(decimal - f.decimal) < 0.13) closest = f.fraction;
   });
-
   if (closest === "") return Math.round(num);
   return whole === 0 ? closest : whole + " " + closest;
 }
@@ -48,12 +43,6 @@ function toFraction(num) {
 function renderRecipes() {
   const recipeDiv = document.getElementById("recipes");
   recipeDiv.innerHTML = "";
-
-  if (!recipes || recipes.length === 0) {
-    recipeDiv.innerHTML = "<p>No recipes found.</p>";
-    return;
-  }
-
   const servingsInput = parseInt(document.getElementById("servings").value) || 1;
 
   recipes.forEach((recipe, index) => {
@@ -70,10 +59,8 @@ function renderRecipes() {
       <div class="recipeCard">
         <h2>${recipe.name}</h2>
         <p>Servings: ${servingsInput}</p>
-        <h4>Ingredients</h4>
-        <ul>${ingredientsHTML}</ul>
-        <h4>Steps</h4>
-        <ol>${stepsHTML}</ol>
+        <h4>Ingredients</h4><ul>${ingredientsHTML}</ul>
+        <h4>Steps</h4><ol>${stepsHTML}</ol>
         <button onclick="openMealSelector(${index})">Add To Meal Plan</button>
       </div>
     `;
@@ -81,7 +68,7 @@ function renderRecipes() {
 }
 
 // ----------------------------
-// Add Meal Selector UI
+// Meal Selector UI
 // ----------------------------
 let selectedRecipeIndex = null;
 let selectedDay = null;
@@ -93,8 +80,8 @@ function openMealSelector(recipeIndex) {
 
   const dayButtonsDiv = document.getElementById("dayButtons");
   dayButtonsDiv.innerHTML = "";
-
   const length = parseInt(document.getElementById("planLength").value) || 30;
+
   for (let i = 1; i <= length; i++) {
     const btn = document.createElement("button");
     btn.textContent = "Day " + i;
@@ -103,21 +90,14 @@ function openMealSelector(recipeIndex) {
   }
 }
 
-function selectDay(day) {
-  selectedDay = day;
-}
-
+function selectDay(day) { selectedDay = day; }
 function selectMealType(type) {
   selectedMealType = type;
   if (selectedDay === null || selectedRecipeIndex === null) {
     alert("Please select a day first!");
     return;
   }
-
-  if (!mealPlan[selectedDay - 1]) {
-    mealPlan[selectedDay - 1] = { day: selectedDay, breakfast: null, lunch: null, dinner: null };
-  }
-
+  if (!mealPlan[selectedDay - 1]) mealPlan[selectedDay - 1] = { day: selectedDay, breakfast: null, lunch: null, dinner: null };
   mealPlan[selectedDay - 1][selectedMealType] = { name: recipes[selectedRecipeIndex].name };
   saveMealPlan();
   closeMealSelector();
@@ -144,18 +124,12 @@ function saveMealPlan() {
 function loadPlan() {
   const planDiv = document.getElementById("plan");
   planDiv.innerHTML = "";
-
-  if (!mealPlan || mealPlan.length === 0) {
-    planDiv.innerHTML = "<p>No meals added yet.</p>";
-    return;
-  }
-
+  if (!mealPlan || mealPlan.length === 0) { planDiv.innerHTML = "<p>No meals added yet.</p>"; return; }
   const length = parseInt(document.getElementById("planLength").value) || 30;
 
   for (let i = 0; i < length; i++) {
     const day = mealPlan[i];
     if (!day) continue;
-
     planDiv.innerHTML += `
       <h3>Day ${day.day}</h3>
       Breakfast: ${day.breakfast ? day.breakfast.name : ""} <br>
@@ -170,17 +144,11 @@ function loadPlan() {
 // ----------------------------
 function generateGrocery() {
   let list = {};
-
   mealPlan.forEach(day => {
     ["breakfast","lunch","dinner"].forEach(mealType=>{
-      let meal = day[mealType];
-      if(!meal) return;
-
-      let recipe = recipes.find(r => r.name === meal.name);
-      if(!recipe) return;
-
+      let meal = day[mealType]; if(!meal) return;
+      let recipe = recipes.find(r => r.name === meal.name); if(!recipe) return;
       const servingsInput = parseInt(document.getElementById("servings").value) || recipe.servings;
-
       recipe.ingredients.forEach(i=>{
         let scaledAmount = i.amount * (servingsInput / recipe.servings);
         if(!list[i.name]) list[i.name] = {amount:0, unit:i.unit};
@@ -191,7 +159,7 @@ function generateGrocery() {
 
   function roundToStoreSize(amount, unit, name) {
     const bulkItems = ["beans","chickpeas","lentils","rice","quinoa","oats"];
-    if(bulkItems.some(b => name.toLowerCase().includes(b))) return Math.ceil(amount/1000) + " kg";
+    if(bulkItems.some(b => name.toLowerCase().includes(b))) return Math.ceil(amount/1000)+" kg";
     if(unit==="g") return Math.ceil(amount/1000)+" kg";
     if(unit==="ml") return Math.ceil(amount/1000)+" L";
     if(unit==="tsp") return Math.ceil(amount/3)+" tbsp";
@@ -207,7 +175,6 @@ function generateGrocery() {
     html += `<li>${roundToStoreSize(info.amount, info.unit, item)} ${item}</li>`;
   }
   html += "</ul>";
-
   document.getElementById("grocery").innerHTML = html;
 }
 
@@ -217,19 +184,13 @@ function generateGrocery() {
 function generateMealPrep() {
   const prepDiv = document.getElementById("prep");
   prepDiv.innerHTML = "<h2>Weekly Meal Prep</h2>";
-
-  if(!mealPlan || mealPlan.length === 0){
-    prepDiv.innerHTML += "<p>No meals added yet.</p>";
-    return;
-  }
+  if(!mealPlan || mealPlan.length === 0){ prepDiv.innerHTML += "<p>No meals added yet.</p>"; return; }
 
   let list = {};
   mealPlan.forEach(day => {
     ["breakfast","lunch","dinner"].forEach(mealType=>{
-      let meal = day[mealType];
-      if(!meal) return;
-      let recipe = recipes.find(r => r.name === meal.name);
-      if(!recipe) return;
+      let meal = day[mealType]; if(!meal) return;
+      let recipe = recipes.find(r => r.name === meal.name); if(!recipe) return;
       const servingsInput = parseInt(document.getElementById("servings").value) || recipe.servings;
       recipe.ingredients.forEach(i=>{
         let scaledAmount = i.amount * (servingsInput / recipe.servings);
