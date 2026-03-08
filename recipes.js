@@ -12,7 +12,7 @@ const recipes = [
     steps: [
       "Chop apples and dates",
       "Mix oats, apples, cinnamon, and water in a pot",
-      "Cook on medium heat for 5–7 minutes",
+      "Cook on medium heat 5–7 minutes",
       "Add dates and stir",
       "Serve warm"
     ]
