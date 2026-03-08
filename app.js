@@ -28,15 +28,41 @@ recipeDiv.innerHTML="";
 
 recipes.forEach((recipe,index)=>{
 
+let ingredientList = "";
+let stepList = "";
+
+recipe.ingredients.forEach(i=>{
+ingredientList += `<li>${i.amount} ${i.unit} ${i.name}</li>`;
+});
+
+if(recipe.steps){
+recipe.steps.forEach(step=>{
+stepList += `<li>${step}</li>`;
+});
+}
+
 const card=document.createElement("div");
 
 card.className="recipeCard";
 
 card.innerHTML=`
-<h3>${recipe.name}</h3>
+
+<h2>${recipe.name}</h2>
+
+<h4>Ingredients</h4>
+<ul>
+${ingredientList}
+</ul>
+
+<h4>Steps</h4>
+<ol>
+${stepList}
+</ol>
+
 <button onclick="openMealSelector(${index})">
 Add To Meal Plan
 </button>
+
 `;
 
 recipeDiv.appendChild(card);
@@ -106,3 +132,4 @@ selectedRecipe=null;
 selectedDay=null;
 
 }
+
